@@ -1,0 +1,12 @@
+
+
+
+
+# optionally install a specific version:
+#pip install sendgrid==6.6.0
+#conda create emails-env python=3.7 # (first time only)
+#conda activate emails-env
+
+#pip install -r requirements.txt
+python-dotenv
+sendgrid==6.6.0
