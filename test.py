@@ -18,8 +18,6 @@ subject = "Your Cocktail Recipe is HERE!!"
 html_content = "Hey do you want a drink?"
 print("HTML:", html_content)
 
-# FYI: we'll need to use our verified SENDER_ADDRESS as the `from_email` param
-# ... but we can customize the `to_emails` param to send to other addresses
 message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS, subject=subject, html_content=html_content)
 
 try:
