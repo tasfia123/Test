@@ -1,4 +1,3 @@
-# # ##Email the choice to user 
 import os
 from dotenv import load_dotenv
 
@@ -33,127 +32,132 @@ else:
     while True:
         random_drink = random.choice(drinks)
         print("Cocktail choice:",random_drink["strDrink"])
+        url = random_drink["strDrinkThumb"]
+        webbrowser.open(url)
 
         user_choice = input("Do you want this type of cocktail? If so, type 'yes' If no, type any key: ").lower()
+        
         if  user_choice == "yes":
             break
             
             print("\n")
     
     drink_id = random_drink["idDrink"]
-    
+
     request_url_id = f"https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i={drink_id}"
-   
     id_response = requests.get(request_url_id)
     id_data = json.loads(id_response.text)
     
-    request_url_ingredients = f"https://www.thecocktaildb.com/api/json/v1/1/list.php?i=list"
-    ingredients_response = requests.get(request_url_ingredients)
-    ingredients_data = json.loads(ingredients_response.text)
-   
 
-    print("\n")
-    print("Instructions: ")
-   
-    for i in (id_data["drinks"]):
-        print(i["strInstructions"], "\n")
+drink = id_data["drinks"][0]
 
-        print("Ingredients: ")
-        print("Ingredient 1: ", i["strMeasure1"], i["strIngredient1"])
-        print("Ingredient 2: ", i["strMeasure2"], i["strIngredient2"])
-        print("Ingredient 3: ", i["strMeasure3"], i["strIngredient3"])
-        print("Ingredient 4: ", i["strMeasure4"], i["strIngredient4"])
-        print("Ingredient 5: ", i["strMeasure5"], i["strIngredient5"])
-        print("Ingredient 6: ", i["strMeasure6"], i["strIngredient6"])
-        print("Ingredient 7: ", i["strMeasure7"], i["strIngredient7"])
-        print("Ingredient 8: ", i["strMeasure8"], i["strIngredient8"])
-        print("Ingredient 9: ", i["strMeasure9"], i["strIngredient9"])
-        print("Ingredient 10: ", i["strMeasure10"], i["strIngredient10"])
-        print("Ingredient 11: ", i["strMeasure11"], i["strIngredient11"])
-        print("Ingredient 12: ", i["strMeasure12"], i["strIngredient12"])
-        print("Ingredient 13: ", i["strMeasure13"], i["strIngredient13"])
-        print("Ingredient 14: ", i["strMeasure14"], i["strIngredient14"])
-        print("Ingredient 15: ", i["strMeasure15"], i["strIngredient15"])
+for index in range(1, 15):
+    key = "strIngredient"+str(index)
+    ingredient = drink[key]
+    key = "strMeasure"+str(index)
+    measurement = drink[key]
+    if (ingredient is not None):
+        if measurement is not None:
+            print(measurement, ingredient)
+        else:
+            print(ingredient)
 
 
-
-        url = i["strDrinkThumb"]
-        webbrowser.open(url)
-
-
-
+liquor
 
 ##Email the choice to user 
-import os
-from dotenv import load_dotenv
+
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-load_dotenv()
+SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY")
+SENDER_EMAIL_ADDRESS = os.getenv("SENDER_EMAIL_ADDRESS")
 
-SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY2", default="OOPS, please set env var called 'SENDGRID_API_KEY'")
-SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
-print("SendGrid Code",SENDGRID_API_KEY)
+USER_NAME = os.getenv("USER_NAME", default="Cocktail Lover")
 
-client = SendGridAPIClient(SENDGRID_API_KEY) #> <class 'sendgrid.sendgrid.SendGridAPIClient>
-print("CLIENT:", type(client))
+def send_email(subject="YOUR COCKTAIL RECIPE IS HERE!", html="<p>Enjoy your drink!</p>", recipient_address=SENDER_EMAIL_ADDRESS):
 
-subject = "Your Cocktail Recipe is HERE!!"
+    client = SendGridAPIClient(SENDGRID_API_KEY)
+    print("CLIENT:", type(client))
+    print("SUBJECT:", subject)
 
-random = "Cocktail Lover"
-cocktail_choice = random_drink["strDrink"]
-drink = id_data["drinks"][0]
-instructions = drink["strInstructions"]
-ingrediant_one = drink["strIngredient1"]
-measurement_one= drink["strMeasure1"]
-ingrediant_2 = drink["strIngredient2"]
-measurement_2= drink["strMeasure2"]
-ingrediant_3 = drink["strIngredient3"]
-measurement_3= drink["strMeasure3"]
-ingrediant_4 = drink["strIngredient4"]
-measurement_4= drink["strMeasure4"]
-ingrediant_5 = drink["strIngredient5"]
-measurement_5= drink["strMeasure5"]
-ingrediant_6 = drink["strIngredient6"]
-measurement_6= drink["strMeasure6"]
-ingrediant_7 = drink["strIngredient7"]
-measurement_7= drink["strMeasure7"]
-ingrediant_8 = drink["strIngredient8"]
-measurement_8= drink["strMeasure8"]
-ingrediant_9 = drink["strIngredient9"]
-measurement_9= drink["strMeasure9"]
-ingrediant_10 = drink["strIngredient10"]
-measurement_10= drink["strMeasure10"]
-ingrediant_11 = drink["strIngredient11"]
-measurement_11= drink["strMeasure11"]
-ingrediant_12 = drink["strIngredient12"]
-measurement_12= drink["strMeasure12"]
-ingrediant_13 = drink["strIngredient13"]
-measurement_13= drink["strMeasure13"]
-ingrediant_14 = drink["strIngredient14"]
-measurement_14= drink["strMeasure14"]
-ingrediant_15 = drink["strIngredient15"]
-measurement_15= drink["strMeasure15"]
-#this is where the template is not working 
-html_content = f"Hello {random}, you chose a cocktail with {liquor}!!, this is the name of your cocktail {cocktail_choice}!!,\n"
-html_content += f"instructions:{instructions}"
-html_content += f"{request_url}"
-html_content += f"These are the ingrediants you need:"
-html_content += f"{ingrediant_one}, {measurement_one},\n,{ingrediant_2}, {measurement_2}, \n, {ingrediant_3}, {measurement_3},\n, {ingrediant_4}, {measurement_4},\n,{ingrediant_5}, {measurement_5}, \n, {ingrediant_6}, {measurement_6}, \n , {ingrediant_7}, {measurement_7}, \n ,{ingrediant_8}, {measurement_8}, \n ,{ingrediant_9}, {measurement_9}, \n ,{ingrediant_10}, {measurement_10}, \n ,{ingrediant_11}, {measurement_11}, \n ,{ingrediant_12}, {measurement_12}, \n, {ingrediant_12}, {measurement_12}, \n, {ingrediant_13}, {measurement_13}, \n, {ingrediant_14}, {measurement_14}, \n, {ingrediant_15}, {measurement_15}, \n"
+    message = Mail(from_email=SENDER_EMAIL_ADDRESS, to_emails=recipient_address, subject=subject, html_content=html)
 
-print("HTML:", html_content)
-message = Mail(from_email=SENDER_ADDRESS, to_emails=SENDER_ADDRESS, subject=subject, html_content=html_content)
+    try:
+       response = client.send(message)
+       print("RESPONSE:", type(response)) #> <class 'python_http_client.client.Response'>
+       print(response.status_code) #> 202 indicates SUCCESS
+       return response
+    except Exception as e:
+       print("OOPS", type(e), e.message)
+       return None
 
-try:
-    response = client.send(message)
+if __name__ == "__main__":
+    
+    subject = "YOUR COCKTAIL RECIPE IS HERE!"
 
-    print("RESPONSE:", type(response)) #> <class 'python_http_client.client.Response'>
-    print(response.status_code) #> 202 indicates SUCCESS
-    print(response.body)
-    print(response.headers)
+    cocktail_choice = random_drink["strDrink"]
+    drink = id_data["drinks"][0]
+    instructions = drink["strInstructions"]
+    ingredient_1 = drink["strIngredient1"]
+    measurement_1 = drink["strMeasure1"]
+    ingredient_2 = drink["strIngredient2"]
+    measurement_2 = drink["strMeasure2"]
+    ingredient_3 = drink["strIngredient3"]
+    measurement_3 = drink["strMeasure3"]
+    ingredient_4 = drink["strIngredient4"]
+    measurement_4 = drink["strMeasure4"]
+    ingredient_5 = drink["strIngredient5"]
+    measurement_5 = drink["strMeasure5"]
+    ingredient_6 = drink["strIngredient6"]
+    measurement_6 = drink["strMeasure6"]
+    ingredient_7 = drink["strIngredient7"]
+    measurement_7 = drink["strMeasure7"]
+    ingredient_8 = drink["strIngredient8"]
+    measurement_8 = drink["strMeasure8"]
+    ingredient_9 = drink["strIngredient9"]
+    measurement_9 = drink["strMeasure9"]
+    ingredient_10 = drink["strIngredient10"]
+    measurement_10 = drink["strMeasure10"]
+    ingredient_11 = drink["strIngredient11"]
+    measurement_11 = drink["strMeasure11"]
+    ingredient_12 = drink["strIngredient12"]
+    measurement_12 = drink["strMeasure12"]
+    ingredient_13 = drink["strIngredient13"]
+    measurement_13 = drink["strMeasure13"]
+    ingredient_14 = drink["strIngredient14"]
+    measurement_14 = drink["strMeasure14"]
+    ingredient_15 = drink["strIngredient15"]
+    measurement_15 = drink["strMeasure15"]
+    image = drink["strDrinkThumb"]
 
-except Exception as err:
-   print(type(err))
-   print(err) 
+    cocktail_html = f"""
+    <h3>Hello, {USER_NAME}!</h3>
+    <h4>You chose a cocktail with {liquor}.</h4>
+    <h4>The name of your cocktail is {cocktail_choice}!</h4>
+    
+    <h4>Here are the instructions:</h4>
+    <p>{instructions}</p>
+    
+    <h4>Here are the required ingredients:</h4>
+    <ul>
+    	<li>{measurement_1} | {ingredient_1}</li>
+    	<li>{measurement_2} | {ingredient_2}</li>
+    	<li>{measurement_3} | {ingredient_3}</li>
+    	<li>{measurement_4} | {ingredient_4}</li>
+    	<li>{measurement_5} | {ingredient_5}</li>
+    	<li>{measurement_6} | {ingredient_6}</li>
+    	<li>{measurement_7} | {ingredient_7}</li>
+    	<li>{measurement_8} | {ingredient_8}</li>
+    	<li>{measurement_9} | {ingredient_9}</li>
+    	<li>{measurement_10} | {ingredient_10}</li>
+    	<li>{measurement_11} | {ingredient_11}</li>
+    	<li>{measurement_12} | {ingredient_12}</li>
+    	<li>{measurement_13} | {ingredient_13}</li>
+    	<li>{measurement_14} | {ingredient_14}</li>
+    	<li>{measurement_15} | {ingredient_15}</li>
+    </ul>
+    <img src="{image}">
+    """
 
-
+    send_email(subject, cocktail_html)
