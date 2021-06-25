@@ -95,12 +95,12 @@ SENDGRID_API_KEY = os.getenv("SENDGRID_API_KEY2", default="OOPS, please set env 
 SENDER_ADDRESS = os.getenv("SENDER_ADDRESS", default="OOPS, please set env var called 'SENDER_ADDRESS'")
 print("SendGrid Code",SENDGRID_API_KEY)
 
-client = SendGridAPIClient("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") #> <class 'sendgrid.sendgrid.SendGridAPIClient>
+client = SendGridAPIClient(SENDGRID_API_KEY) #> <class 'sendgrid.sendgrid.SendGridAPIClient>
 print("CLIENT:", type(client))
 
 subject = "Your Cocktail Recipe is HERE!!"
 
-random = "Tammana"
+random = "Cocktail Lover"
 cocktail_choice = random_drink["strDrink"]
 drink = id_data["drinks"][0]
 instructions = drink["strInstructions"]
